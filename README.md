@@ -13,11 +13,11 @@ Accurately estimate a vehicle’s market value using its key attributes — help
 
 # Project Structure
 vehicle-price-predictor
-├── app.py                  # Streamlit web app
-├── dataset.csv             # Vehicle dataset with specs and prices
-├── xgboost_vehicle_price_model.pkl  # Trained model (saved with joblib)
-├── requirements.txt        # Python dependencies
-└── README.md               # Project documentation
+> app.py                  # Streamlit web app
+> dataset.csv             # Vehicle dataset with specs and prices
+> xgboost_vehicle_price_model.pkl  # Trained model (saved with joblib)
+> requirements.txt        # Python dependencies
+> README.md               # Project documentation
 
 Note: `xgboost_vehicle_price_model.pkl` is a serialized binary ML model and cannot be viewed directly on GitHub.
 It is loaded at runtime by the Streamlit app.
