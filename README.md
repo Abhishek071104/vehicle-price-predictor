@@ -5,10 +5,10 @@ Vehicle Price Predictor – ML + Streamlit : An end-to-end machine learning proj
 Accurately estimate a vehicle’s market value using its key attributes — helping car buyers, sellers, and dealerships make informed decisions.
 
 # Technologies Used
--Python 3
--XGBoost Regressor (for accurate predictions)
--Scikit-learn (model evaluation & preprocessing)
--Streamlit (for a clean, interactive UI)
+-Python 3,
+-XGBoost Regressor (for accurate predictions),
+-Scikit-learn (model evaluation & preprocessing),
+-Streamlit (for a clean, interactive UI),
 -Pandas, NumPy (data handling)
 
 # Project Structure
