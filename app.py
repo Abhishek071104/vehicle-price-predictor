@@ -42,7 +42,7 @@ with st.sidebar:
     st.markdown("📧 [manipatruniabhishek07@gmail.com](mailto:manipatruniabhishek07@gmail.com)")
     st.markdown("---")
     st.markdown("### 📘 About This App")
-    st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with 💡 and Streamlit.")
+    st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
 
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Enter vehicle details below to get an estimated **market price** using a machine learning model.")
