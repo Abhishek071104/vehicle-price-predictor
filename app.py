@@ -37,8 +37,8 @@ st.set_page_config(page_title="Vehicle Price Predictor", page_icon="🚗", layou
 # Sidebar
 with st.sidebar:
     st.markdown("### 👤 Made by [M ABHISHEK](https://github.com/Abhishek071104)")
-    st.markdown("[🔗 GitHub](https://github.com/Abhishek071104)")
-    st.markdown("[🔗 LinkedIn](https://www.linkedin.com/in/-mabhishek/)")
+    st.markdown("🔗[GitHub](https://github.com/Abhishek071104)")
+    st.markdown("🔗[LinkedIn](https://www.linkedin.com/in/-mabhishek/)")
     st.markdown("📧 [manipatruniabhishek07@gmail.com](mailto:manipatruniabhishek07@gmail.com)")
     st.markdown("---")
     st.markdown("### 📘 About This App")
