@@ -74,6 +74,10 @@ with col6:
 
 st.markdown("---")
 
+# Initialize session state for history
+if "history" not in st.session_state:
+    st.session_state.history = []
+
 # Prediction logic
 if st.button("🎯 Predict Price"):
     input_dict = {
@@ -95,6 +99,25 @@ if st.button("🎯 Predict Price"):
 
     input_df = pd.DataFrame([input_dict])
     prediction = model.predict(input_df)[0]
-    
+
     st.success(f"💵 **Estimated Price: ${int(prediction):,}**")
     st.balloons()
+
+    # Store display version in history
+    display_data = {
+        "Make": make,
+        "Model": model_name,
+        "Year": year,
+        "Mileage": mileage,
+        "Engine": engine,
+        "Fuel": fuel,
+        "Transmission": transmission,
+        "Body": body,
+        "Price ($)": int(prediction)
+    }
+    st.session_state.history.append(display_data)
+
+# Show prediction history
+if st.session_state.history:
+    st.markdown("## 📜 Previous Predictions")
+    st.dataframe(pd.DataFrame(st.session_state.history).iloc[::-1], use_container_width=True)
