@@ -3,5 +3,4 @@ pandas
 scikit-learn
 xgboost
 joblib
-qrcode
 Pillow
