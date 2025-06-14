@@ -18,7 +18,7 @@ def load_lottieurl(url):
         return None
     return r.json()
 
-# Replace with a moving car animation
+# 🚗 Moving car animation
 lottie_car = load_lottieurl("https://lottie.host/0c9c51d8-8a1f-4b6d-8207-8ccfbec576d6/pVx1swxa7N.json")
 
 # -------------------- Load Model & Data --------------------
