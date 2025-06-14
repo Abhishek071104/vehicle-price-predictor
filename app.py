@@ -21,7 +21,8 @@ def load_lottieurl(url):
         pass
     return None
 
-lottie_car = load_lottieurl("https://lottie.host/932f2344-5d24-4cb6-84a4-00f83ab86171/MuM4VoYaML.json")
+# Working Lottie animation (moving car)
+lottie_car = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_u4yrau.json")
 
 # -------------------- Load Model & Data --------------------
 @st.cache_resource
@@ -49,7 +50,7 @@ if "history" not in st.session_state:
 
 # -------------------- Sidebar --------------------
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/Abhishek071104/vehicle-price-predictor/main/static/car.png", width=80)
+    st.image("8f0ee631-2a1f-4b9a-b296-d0165ab82a84.png", width=100)
     st.title("📌 About")
     st.markdown("""
     🚗 **Vehicle Price Predictor**  
@@ -65,16 +66,15 @@ with st.sidebar:
     """)
 
 # -------------------- Header --------------------
-col1, col2 = st.columns([1, 2])
+col1, col2 = st.columns([1.5, 1])
 with col1:
-    st.title("Vehicle Price Predictor")
+    st.title("🚘 Vehicle Price Predictor")
     st.markdown("Enter vehicle details to get an estimated market price.")
 with col2:
     if lottie_car:
-        st_lottie(lottie_car, height=180, key="car")
+        st_lottie(lottie_car, height=150, key="car")
     else:
-        # Static fallback icon
-        st.image("https://raw.githubusercontent.com/Abhishek071104/vehicle-price-predictor/main/static/car.png", width=200)
+        st.image("8f0ee631-2a1f-4b9a-b296-d0165ab82a84.png", width=150)
 
 st.markdown("---")
 
