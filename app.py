@@ -45,13 +45,7 @@ with st.sidebar:
     st.markdown("### 📘 About This App")
     st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
 
-    # QR Code (in-memory)
-    qr = qrcode.make("https://vehiclepricepredictor.streamlit.app")
-    buffer = BytesIO()
-    qr.save(buffer, format="PNG")
-    buffer.seek(0)
-    st.image(buffer, caption="Scan to open app", use_container_width=True)
-
+    
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
 
