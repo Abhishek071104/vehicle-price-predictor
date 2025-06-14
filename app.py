@@ -7,7 +7,7 @@ import requests
 # -------------------- Page Config --------------------
 st.set_page_config(
     page_title="Vehicle Price Predictor",
-    page_icon="🚘",
+    page_icon="https://raw.githubusercontent.com/Abhishek071104/vehicle-price-predictor/main/static/favicon.png",
     layout="wide"
 )
 
@@ -54,7 +54,7 @@ if "history" not in st.session_state:
 # -------------------- Sidebar --------------------
 with st.sidebar:
     st.image(LOGO_URL, width=100)
-    st.title("📌 About")
+    st.title("🚗 About")
     st.markdown("""
     🚗 **Vehicle Price Predictor**  
     Built with **XGBoost + Streamlit**
@@ -121,24 +121,4 @@ if st.button("🔍 Predict Price"):
     }
     input_df = pd.DataFrame([input_dict])
     pred = model.predict(input_df)[0]
-    st.success(f"💵 **Estimated Price: ₹{int(pred):,}**")
-    st.session_state.history.append({
-        "Make": make,
-        "Model": model_input,
-        "Year": year,
-        "Mileage": mileage,
-        "Price": int(pred)
-    })
-
-# -------------------- History --------------------
-if st.session_state.history:
-    st.markdown("### 🕓 Previous Predictions")
-    st.dataframe(pd.DataFrame(st.session_state.history))
-
-# -------------------- Bar Chart --------------------
-st.markdown("### 📊 Example: Mileage vs Price Trend")
-chart_df = pd.DataFrame({
-    'Mileage': [0, 20000, 40000, 60000, 80000],
-    'Predicted Price': [45000, 40000, 35000, 30000, 25000]
-})
-st.bar_chart(chart_df.set_index("Mileage"))
+    st.success(f"💵 **Estimated Price: ₹{**
