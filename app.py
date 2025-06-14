@@ -3,9 +3,7 @@ import pandas as pd
 import joblib
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-import qrcode
 import time
-from io import BytesIO
 
 # Load the trained model
 model = joblib.load("xgboost_vehicle_price_model.pkl")
@@ -35,10 +33,10 @@ def encode_input(value, col_name):
 # Streamlit Config
 st.set_page_config(page_title="Vehicle Price Predictor", page_icon="🚗", layout="centered")
 
-# ---------- Top Bar ----------
+# Top bar (fixed)
 st.markdown("""
     <style>
-        .top-bar {
+        .custom-top-bar {
             background-color: #111827;
             padding: 1rem;
             color: white;
@@ -49,23 +47,19 @@ st.markdown("""
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 100;
+            z-index: 9999;
             box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
         }
-        .main-content {
-            padding-top: 90px;
+        .main > div:first-child {
+            padding-top: 80px;
         }
     </style>
-    <div class="top-bar">
+    <div class="custom-top-bar">
         🚗 Vehicle Price Predictor
     </div>
 """, unsafe_allow_html=True)
 
-# ---------- Banner Image ----------
-st.markdown('<div class="main-content">', unsafe_allow_html=True)
-st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
-
-# ---------- Sidebar ----------
+# Sidebar
 with st.sidebar:
     st.markdown("### 👤 Made by [M ABHISHEK](https://github.com/Abhishek071104)")
     st.markdown("🔗[GitHub](https://github.com/Abhishek071104)")
@@ -75,15 +69,19 @@ with st.sidebar:
     st.markdown("### 📘 About This App")
     st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
 
-# ---------- Main Title & Form ----------
-st.title("🚗 Vehicle Price Predictor")
+# Banner Image
+st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
+
+# Optional heading (can be removed)
+# st.title("🚗 Vehicle Price Predictor")
+
 st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
 
 # Session state for history
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Layout using Tabs
+# Tabs
 tab1, tab2 = st.tabs(["🔮 Predict", "📜 History"])
 
 with tab1:
@@ -120,9 +118,8 @@ with tab1:
     with col6:
         interior_color = st.text_input("🛋️ Interior Color", value="Black")
 
-    # Vehicle image preview
     if make and model_name:
-        st.image(f"https://source.unsplash.com/400x200/?{make},{model_name}", caption="Sample Image", use_container_width=False)
+        st.image(f"https://source.unsplash.com/400x200/?{make},{model_name}", caption="Sample Image", use_container_width=True)
 
     if st.button("🎯 Predict Price"):
         input_dict = {
@@ -141,7 +138,7 @@ with tab1:
             "interior_color": encode_input(interior_color, "interior_color"),
             "drivetrain": encode_input(drivetrain, "drivetrain")
         }
-        # Show progress bar while "loading"
+
         progress_text = "Predicting vehicle price..."
         my_bar = st.progress(0, text=progress_text)
         for percent_complete in range(100):
@@ -150,8 +147,6 @@ with tab1:
 
         input_df = pd.DataFrame([input_dict])
         prediction = model.predict(input_df)[0]
-        price = int(prediction)
-
         st.success(f"💵 Estimated Price: **${int(prediction):,}**")
 
         display_data = {
@@ -179,6 +174,3 @@ with tab2:
         if st.button("🧹 Clear History"):
             st.session_state.history = []
             st.success("History cleared!")
-
-# ---------- End main-content wrapper ----------
-st.markdown('</div>', unsafe_allow_html=True)
