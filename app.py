@@ -49,10 +49,10 @@ with st.sidebar:
     buffer = BytesIO()
     qr.save(buffer, format="PNG")
     buffer.seek(0)
-    st.image(buffer, caption="Scan to open app", use_column_width=True)
+    st.image(buffer, caption="Scan to open app", use_container_width=True)
 
 # Banner
-st.image("https://source.unsplash.com/1200x300/?car,showroom", use_column_width=True)
+st.image("https://source.unsplash.com/1200x300/?car,showroom", use_container_width=True)
 
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
@@ -100,7 +100,7 @@ with tab1:
 
     # Vehicle image preview
     if make and model_name:
-        st.image(f"https://source.unsplash.com/400x200/?{make},{model_name}", caption="Sample Image", use_column_width=False)
+        st.image(f"https://source.unsplash.com/400x200/?{make},{model_name}", caption="Sample Image", use_container_width=False)
 
     if st.button("🎯 Predict Price"):
         input_dict = {
