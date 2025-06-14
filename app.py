@@ -28,31 +28,54 @@ def encode_input(value, col_name):
     if encoder and value in encoder.classes_:
         return encoder.transform([value])[0]
     else:
-        return 0  # fallback if unseen
+        return 0  # fallback for unseen values
 
 # ---- Streamlit UI Starts Here ----
 
+st.set_page_config(page_title="Vehicle Price Predictor", page_icon="🚗", layout="centered")
+
 st.title("🚗 Vehicle Price Predictor")
-st.write("Enter vehicle details to get an estimated market price.")
+st.markdown("Enter vehicle details below to get an estimated **market price** using a machine learning model.")
 
-# Input fields
-make = st.text_input("Make (e.g., Toyota, Ford, BMW)")
-model_name = st.text_input("Model (e.g., Camry, Mustang)")
-year = st.number_input("Year", min_value=1990, max_value=2025, value=2018)
-engine = st.text_input("Engine (e.g., 2.0L I4)")
-cylinders = st.number_input("Cylinders", min_value=2, max_value=16, value=4)
-fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
-mileage = st.number_input("Mileage (miles)", min_value=0, value=30000)
-transmission = st.selectbox("Transmission", ["Automatic", "Manual", "CVT"])
-trim = st.text_input("Trim", value="Unknown")
-body = st.selectbox("Body Style", ["Sedan", "SUV", "Pickup Truck", "Coupe", "Hatchback", "Van", "Other"])
-doors = st.number_input("Doors", min_value=2, max_value=6, value=4)
-exterior_color = st.text_input("Exterior Color", value="White")
-interior_color = st.text_input("Interior Color", value="Black")
-drivetrain = st.selectbox("Drivetrain", ["Front-wheel Drive", "Rear-wheel Drive", "All-wheel Drive", "Four-wheel Drive"])
+st.divider()
+st.subheader("🔧 Basic Vehicle Details")
 
-# Prediction button
-if st.button("Predict Price"):
+col1, col2 = st.columns(2)
+with col1:
+    make = st.text_input("Make", placeholder="e.g., Toyota", help="Manufacturer of the vehicle")
+    model_name = st.text_input("Model", placeholder="e.g., Corolla", help="Specific model of the vehicle")
+    year = st.number_input("Year", min_value=1990, max_value=2025, value=2018, help="Manufacturing year")
+
+with col2:
+    engine = st.text_input("Engine", placeholder="e.g., 2.0L I4", help="Engine type or size")
+    cylinders = st.number_input("Cylinders", min_value=2, max_value=16, value=4, help="Number of cylinders")
+    mileage = st.number_input("Mileage (miles)", min_value=0, value=30000, help="Total distance driven")
+
+st.subheader("⚙️ Specifications")
+
+col3, col4 = st.columns(2)
+with col3:
+    fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
+    transmission = st.selectbox("Transmission", ["Automatic", "Manual", "CVT"])
+    drivetrain = st.selectbox("Drivetrain", ["Front-wheel Drive", "Rear-wheel Drive", "All-wheel Drive", "Four-wheel Drive"])
+
+with col4:
+    body = st.selectbox("Body Style", ["Sedan", "SUV", "Pickup Truck", "Coupe", "Hatchback", "Van", "Other"])
+    doors = st.number_input("Doors", min_value=2, max_value=6, value=4)
+    trim = st.text_input("Trim", value="Unknown", help="Trim level (e.g., XLE, SE)")
+
+st.subheader("🎨 Appearance")
+
+col5, col6 = st.columns(2)
+with col5:
+    exterior_color = st.text_input("Exterior Color", value="White")
+with col6:
+    interior_color = st.text_input("Interior Color", value="Black")
+
+st.markdown("---")
+
+# Prediction logic
+if st.button("🎯 Predict Price"):
     input_dict = {
         "make": encode_input(make, "make"),
         "model": encode_input(model_name, "model"),
@@ -72,4 +95,6 @@ if st.button("Predict Price"):
 
     input_df = pd.DataFrame([input_dict])
     prediction = model.predict(input_df)[0]
-    st.success(f"💵 Estimated Price: ${int(prediction):,}")
+    
+    st.success(f"💵 **Estimated Price: ${int(prediction):,}**")
+    st.balloons()
