@@ -51,9 +51,6 @@ with st.sidebar:
     buffer.seek(0)
     st.image(buffer, caption="Scan to open app", use_container_width=True)
 
-# Banner
-st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
-
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
 
@@ -151,3 +148,5 @@ with tab2:
         if st.button("🧹 Clear History"):
             st.session_state.history = []
             st.success("History cleared!")
+# Banner
+st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
