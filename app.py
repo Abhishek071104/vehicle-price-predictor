@@ -7,27 +7,28 @@ import requests
 # -------------------- Page Config --------------------
 st.set_page_config(
     page_title="Vehicle Price Predictor",
-    page_icon="https://cdn-icons-png.flaticon.com/512/743/743007.png",
+    page_icon="🚘",
     layout="wide"
 )
 
-# -------------------- Load Lottie Animation --------------------
+# -------------------- Load Lottie --------------------
 def load_lottieurl(url):
     r = requests.get(url)
     if r.status_code != 200:
         return None
     return r.json()
 
-# ✅ Working animated car
-lottie_car = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_iwmd6pyr.json")
+# ✅ Verified working animated car
+lottie_car = load_lottieurl("https://lottie.host/932f2344-5d24-4cb6-84a4-00f83ab86171/MuM4VoYaML.json")
 
-# -------------------- Load Model & Data --------------------
+# -------------------- Load Model --------------------
 @st.cache_resource
 def load_model():
     return joblib.load("xgboost_vehicle_price_model.pkl")
 
 model = load_model()
 df_sample = pd.read_csv("dataset.csv")
+
 categorical_cols = df_sample.select_dtypes(include=["object"]).columns.tolist()
 
 def load_label_encoders(df, cat_cols):
@@ -74,18 +75,25 @@ st.markdown("---")
 
 # -------------------- Input Form --------------------
 st.subheader("🧾 Enter Vehicle Details")
+
 col1, col2 = st.columns(2)
 with col1:
     make = st.text_input("Make", "Toyota")
     model_input = st.text_input("Model", "Camry")
     year = st.number_input("Year", 1990, 2025, 2019)
-    transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
-    fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
+    engine = st.selectbox("Engine", df_sample["engine"].dropna().unique().tolist())
+    cylinders = st.selectbox("Cylinders", sorted(df_sample["cylinders"].dropna().unique()))
+    transmission = st.selectbox("Transmission", df_sample["transmission"].dropna().unique())
+    trim = st.selectbox("Trim", df_sample["trim"].dropna().unique())
+
 with col2:
-    mileage = st.number_input("Mileage (in km)", 0, 500000, 35000)
-    engine = st.selectbox("Engine Size", ["1.2L", "1.5L", "2.0L", "3.0L", "Electric"])
-    body = st.selectbox("Body Type", ["Sedan", "Hatchback", "SUV", "Coupe"])
-    doors = st.selectbox("Doors", [2, 3, 4, 5])
+    fuel = st.selectbox("Fuel Type", df_sample["fuel"].dropna().unique())
+    mileage = st.number_input("Mileage (in miles)", 0, 500000, 30000)
+    body = st.selectbox("Body Type", df_sample["body"].dropna().unique())
+    doors = st.selectbox("Doors", sorted(df_sample["doors"].dropna().unique()))
+    exterior_color = st.selectbox("Exterior Color", df_sample["exterior_color"].dropna().unique())
+    interior_color = st.selectbox("Interior Color", df_sample["interior_color"].dropna().unique())
+    drivetrain = st.selectbox("Drivetrain", df_sample["drivetrain"].dropna().unique())
 
 # -------------------- Prediction --------------------
 if st.button("🔍 Predict Price"):
@@ -93,12 +101,17 @@ if st.button("🔍 Predict Price"):
         "make": encode_input(make, "make"),
         "model": encode_input(model_input, "model"),
         "year": year,
-        "transmission": encode_input(transmission, "transmission"),
+        "engine": encode_input(engine, "engine"),
+        "cylinders": cylinders,
         "fuel": encode_input(fuel, "fuel"),
         "mileage": mileage,
-        "engine": encode_input(engine, "engine"),
-        "body_type": encode_input(body, "body_type"),
+        "transmission": encode_input(transmission, "transmission"),
+        "trim": encode_input(trim, "trim"),
+        "body": encode_input(body, "body"),
         "doors": doors,
+        "exterior_color": encode_input(exterior_color, "exterior_color"),
+        "interior_color": encode_input(interior_color, "interior_color"),
+        "drivetrain": encode_input(drivetrain, "drivetrain")
     }
 
     input_df = pd.DataFrame([input_dict])
@@ -111,7 +124,7 @@ if st.button("🔍 Predict Price"):
         "Model": model_input,
         "Year": year,
         "Mileage": mileage,
-        "Predicted Price": int(prediction)
+        "Price": int(prediction)
     })
 
 # -------------------- History --------------------
