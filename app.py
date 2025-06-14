@@ -1,110 +1,75 @@
 import streamlit as st
 import pandas as pd
 import joblib
-from streamlit_lottie import st_lottie
-import requests
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
 
-# -------------------- Page Config --------------------
-st.set_page_config(
-    page_title="Vehicle Price Predictor",
-    page_icon="https://cdn-icons-png.flaticon.com/512/743/743007.png",
-    layout="wide"
-)
+# Load the trained model
+model = joblib.load("xgboost_vehicle_price_model.pkl")
 
-# -------------------- Lottie --------------------
-def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-lottie_car = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_touohxv0.json")
-
-# -------------------- Model & Data --------------------
-@st.cache_resource
-def load_model():
-    return joblib.load("xgboost_vehicle_price_model.pkl")
-
-model = load_model()
+# Load sample data for label encoding
 df_sample = pd.read_csv("dataset.csv")
-categorical_cols = df_sample.select_dtypes(include=["object"]).columns.tolist()
+df_sample.fillna("Unknown", inplace=True)
 
-def load_label_encoders(df, cat_cols):
-    encoders = {col: {label: idx for idx, label in enumerate(df[col].astype(str).unique())} for col in cat_cols}
-    return encoders
+# Define categorical columns
+categorical_cols = ['make', 'model', 'engine', 'fuel', 'transmission', 'trim',
+                    'body', 'exterior_color', 'interior_color', 'drivetrain']
 
-encoders = load_label_encoders(df_sample, categorical_cols)
+# Build consistent label encoders
+encoders = {}
+for col in categorical_cols:
+    le = LabelEncoder()
+    df_sample[col] = le.fit_transform(df_sample[col])
+    encoders[col] = le
 
-def encode_input(val, col_name):
-    return encoders.get(col_name, {}).get(val, 0)
+# Encoding function
+def encode_input(value, col_name):
+    encoder = encoders.get(col_name)
+    if encoder and value in encoder.classes_:
+        return encoder.transform([value])[0]
+    else:
+        return 0  # fallback if unseen
 
-# -------------------- Session State --------------------
-if "history" not in st.session_state:
-    st.session_state.history = []
+# ---- Streamlit UI Starts Here ----
 
-# -------------------- Sidebar --------------------
-with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/743/743007.png", width=80)
-    st.title("📌 About")
-    st.markdown("🚗 **Vehicle Price Predictor**\nBuilt with **XGBoost + Streamlit**\n---\n👨‍💻 Made by [Abhishek Manipatruni](#)")
+st.title("🚗 Vehicle Price Predictor")
+st.write("Enter vehicle details to get an estimated market price.")
 
-# -------------------- Header --------------------
-col1, col2 = st.columns([1, 2])
-with col1:
-    st.title("🚗 Vehicle Price Predictor")
-    st.markdown("Enter vehicle details to get an estimated market price.")
-with col2:
-    st_lottie(lottie_car, height=180, key="car")
+# Input fields
+make = st.text_input("Make (e.g., Toyota, Ford, BMW)")
+model_name = st.text_input("Model (e.g., Camry, Mustang)")
+year = st.number_input("Year", min_value=1990, max_value=2025, value=2018)
+engine = st.text_input("Engine (e.g., 2.0L I4)")
+cylinders = st.number_input("Cylinders", min_value=2, max_value=16, value=4)
+fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
+mileage = st.number_input("Mileage (miles)", min_value=0, value=30000)
+transmission = st.selectbox("Transmission", ["Automatic", "Manual", "CVT"])
+trim = st.text_input("Trim", value="Unknown")
+body = st.selectbox("Body Style", ["Sedan", "SUV", "Pickup Truck", "Coupe", "Hatchback", "Van", "Other"])
+doors = st.number_input("Doors", min_value=2, max_value=6, value=4)
+exterior_color = st.text_input("Exterior Color", value="White")
+interior_color = st.text_input("Interior Color", value="Black")
+drivetrain = st.selectbox("Drivetrain", ["Front-wheel Drive", "Rear-wheel Drive", "All-wheel Drive", "Four-wheel Drive"])
 
-st.markdown("---")
-
-# -------------------- Input Form --------------------
-st.subheader("🧾 Enter Vehicle Details")
-col1, col2 = st.columns(2)
-with col1:
-    make = st.text_input("Make", "Toyota")
-    model_input = st.text_input("Model", "Camry")
-    year = st.number_input("Year", 1990, 2025, 2019)
-    transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
-    fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
-with col2:
-    mileage = st.number_input("Mileage (in km)", 0, 500000, 35000)
-    engine = st.selectbox("Engine Size", ["1.2L", "1.5L", "2.0L", "3.0L", "Electric"])
-    body = st.selectbox("Body Type", ["Sedan", "Hatchback", "SUV", "Coupe"])
-    doors = st.selectbox("Doors", [2, 3, 4, 5])
-
-# -------------------- Predict Button --------------------
-if st.button("🔍 Predict Price"):
+# Prediction button
+if st.button("Predict Price"):
     input_dict = {
         "make": encode_input(make, "make"),
-        "model": encode_input(model_input, "model"),
+        "model": encode_input(model_name, "model"),
         "year": year,
-        "transmission": encode_input(transmission, "transmission"),
+        "engine": encode_input(engine, "engine"),
+        "cylinders": cylinders,
         "fuel": encode_input(fuel, "fuel"),
         "mileage": mileage,
-        "engine": encode_input(engine, "engine"),
-        "body_type": encode_input(body, "body_type"),
+        "transmission": encode_input(transmission, "transmission"),
+        "trim": encode_input(trim, "trim"),
+        "body": encode_input(body, "body"),
         "doors": doors,
+        "exterior_color": encode_input(exterior_color, "exterior_color"),
+        "interior_color": encode_input(interior_color, "interior_color"),
+        "drivetrain": encode_input(drivetrain, "drivetrain")
     }
 
     input_df = pd.DataFrame([input_dict])
     prediction = model.predict(input_df)[0]
-    st.success(f"💵 **Estimated Price: ₹{int(prediction):,}**")
-
-    st.session_state.history.append({
-        "Make": make, "Model": model_input, "Year": year,
-        "Mileage": mileage, "Predicted Price": int(prediction)
-    })
-
-# -------------------- History --------------------
-if st.session_state.history:
-    st.markdown("### 🕓 Previous Predictions")
-    st.dataframe(pd.DataFrame(st.session_state.history))
-
-# -------------------- Sample Bar Chart --------------------
-st.markdown("### 📊 Example: Mileage vs Price Trend")
-chart_data = pd.DataFrame({
-    'Mileage': [0, 20000, 40000, 60000, 80000],
-    'Predicted Price': [45000, 40000, 35000, 30000, 25000]
-})
-st.bar_chart(chart_data.set_index("Mileage"))
+    st.success(f"💵 Estimated Price: ${int(prediction):,}")
