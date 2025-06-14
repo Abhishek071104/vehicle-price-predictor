@@ -1,7 +1,7 @@
 streamlit
 pandas
-numpy
 scikit-learn
+xgboost
 joblib
 qrcode
 Pillow
