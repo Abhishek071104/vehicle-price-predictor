@@ -4,14 +4,14 @@ import joblib
 from streamlit_lottie import st_lottie
 import requests
 
-# -------------------- Load Model & Encoders --------------------
-@st.cache_resource
-def load_model():
-    return joblib.load("xgboost_vehicle_price_model.pkl")
+# -------------------- Page Config --------------------
+st.set_page_config(
+    page_title="Vehicle Price Predictor",
+    page_icon="https://cdn-icons-png.flaticon.com/512/743/743007.png",
+    layout="wide"
+)
 
-model = load_model()
-
-# -------------------- Lottie Animation --------------------
+# -------------------- Lottie --------------------
 def load_lottieurl(url):
     r = requests.get(url)
     if r.status_code != 200:
@@ -20,24 +20,35 @@ def load_lottieurl(url):
 
 lottie_car = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_touohxv0.json")
 
-# -------------------- UI --------------------
-st.set_page_config(page_title="Vehicle Price Predictor", page_icon="🚗", layout="wide")
+# -------------------- Model & Data --------------------
+@st.cache_resource
+def load_model():
+    return joblib.load("xgboost_vehicle_price_model.pkl")
 
-# Sidebar
+model = load_model()
+df_sample = pd.read_csv("dataset.csv")
+categorical_cols = df_sample.select_dtypes(include=["object"]).columns.tolist()
+
+def load_label_encoders(df, cat_cols):
+    encoders = {col: {label: idx for idx, label in enumerate(df[col].astype(str).unique())} for col in cat_cols}
+    return encoders
+
+encoders = load_label_encoders(df_sample, categorical_cols)
+
+def encode_input(val, col_name):
+    return encoders.get(col_name, {}).get(val, 0)
+
+# -------------------- Session State --------------------
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+# -------------------- Sidebar --------------------
 with st.sidebar:
+    st.image("https://cdn-icons-png.flaticon.com/512/743/743007.png", width=80)
     st.title("📌 About")
-    st.markdown("""
-    🚗 **Vehicle Price Predictor**  
-    Built with **XGBoost + Streamlit**  
-    Predict accurate market prices based on:
-    - Brand, Model, Year  
-    - Transmission, Fuel type  
-    - Mileage & More  
-    ---
-    👨‍💻 Developed by [Abhishek Manipatruni](#)
-    """)
+    st.markdown("🚗 **Vehicle Price Predictor**\nBuilt with **XGBoost + Streamlit**\n---\n👨‍💻 Made by [Abhishek Manipatruni](#)")
 
-# Header
+# -------------------- Header --------------------
 col1, col2 = st.columns([1, 2])
 with col1:
     st.title("🚗 Vehicle Price Predictor")
@@ -47,33 +58,15 @@ with col2:
 
 st.markdown("---")
 
-# Sample data for encoding (you can improve this by saving your encoders)
-df_sample = pd.read_csv("dataset.csv")
-categorical_cols = df_sample.select_dtypes(include=["object"]).columns.tolist()
-
-def load_label_encoders(df, cat_cols):
-    encoders = {}
-    for col in cat_cols:
-        encoders[col] = {label: idx for idx, label in enumerate(df[col].astype(str).unique())}
-    return encoders
-
-encoders = load_label_encoders(df_sample, categorical_cols)
-
-def encode_input(val, col_name):
-    return encoders.get(col_name, {}).get(val, 0)
-
-# -------------------- Input Section --------------------
+# -------------------- Input Form --------------------
 st.subheader("🧾 Enter Vehicle Details")
-
 col1, col2 = st.columns(2)
-
 with col1:
     make = st.text_input("Make", "Toyota")
     model_input = st.text_input("Model", "Camry")
     year = st.number_input("Year", 1990, 2025, 2019)
     transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
     fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
-
 with col2:
     mileage = st.number_input("Mileage (in km)", 0, 500000, 35000)
     engine = st.selectbox("Engine Size", ["1.2L", "1.5L", "2.0L", "3.0L", "Electric"])
@@ -96,8 +89,22 @@ if st.button("🔍 Predict Price"):
 
     input_df = pd.DataFrame([input_dict])
     prediction = model.predict(input_df)[0]
-
     st.success(f"💵 **Estimated Price: ₹{int(prediction):,}**")
 
-    st.markdown("---")
-    st.markdown("📈 *Prediction is based on past sales data using XGBoost Regression.*")
+    st.session_state.history.append({
+        "Make": make, "Model": model_input, "Year": year,
+        "Mileage": mileage, "Predicted Price": int(prediction)
+    })
+
+# -------------------- History --------------------
+if st.session_state.history:
+    st.markdown("### 🕓 Previous Predictions")
+    st.dataframe(pd.DataFrame(st.session_state.history))
+
+# -------------------- Sample Bar Chart --------------------
+st.markdown("### 📊 Example: Mileage vs Price Trend")
+chart_data = pd.DataFrame({
+    'Mileage': [0, 20000, 40000, 60000, 80000],
+    'Predicted Price': [45000, 40000, 35000, 30000, 25000]
+})
+st.bar_chart(chart_data.set_index("Mileage"))
