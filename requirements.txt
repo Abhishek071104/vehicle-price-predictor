@@ -1,6 +1,6 @@
 streamlit
 pandas
+numpy
 scikit-learn
-xgboost
-streamlit-lottie
-requests
+joblib
+qrcode
