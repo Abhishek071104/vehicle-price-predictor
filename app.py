@@ -34,6 +34,17 @@ def encode_input(value, col_name):
 
 st.set_page_config(page_title="Vehicle Price Predictor", page_icon="🚗", layout="centered")
 
+# Sidebar
+with st.sidebar:
+    st.markdown("## 👤 Made By")
+    st.markdown("**M ABHISHEK**")
+    st.markdown("[🔗 GitHub](https://github.com/)")  # Update with actual GitHub URL if you want
+    st.markdown("[🔗 LinkedIn](https://www.linkedin.com/in/-mabhishek/)")
+    st.markdown("📧 [manipatruniabhishek07@gmail.com](mailto:manipatruniabhishek07@gmail.com)")
+    st.markdown("---")
+    st.markdown("### 📘 About This App")
+    st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with 💡 and Streamlit.")
+
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Enter vehicle details below to get an estimated **market price** using a machine learning model.")
 
