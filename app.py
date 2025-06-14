@@ -46,7 +46,18 @@ if "history" not in st.session_state:
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/743/743007.png", width=80)
     st.title("📌 About")
-    st.markdown("🚗 **Vehicle Price Predictor**\nBuilt with **XGBoost + Streamlit**\n---\n👨‍💻 Made by [Abhishek Manipatruni](#)")
+    st.markdown("""
+    🚗 **Vehicle Price Predictor**  
+    Built with **XGBoost + Streamlit**
+
+    ---
+
+    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/abhishek-manipatruni)
+
+    🐙 [GitHub](https://github.com/Abhishek071104)  
+    💼 [LinkedIn](https://www.linkedin.com/in/abhishek-manipatruni)  
+    📧 [Email](mailto:your-email@example.com)
+    """)
 
 # -------------------- Header --------------------
 col1, col2 = st.columns([1, 2])
