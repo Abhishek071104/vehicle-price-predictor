@@ -78,13 +78,18 @@ with col1:
     make = st.text_input("Make", "Toyota")
     model_input = st.text_input("Model", "Camry")
     year = st.number_input("Year", 1990, 2025, 2019)
-    transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
-    fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
+    transmission = st.selectbox("Transmission", df_sample["transmission"].dropna().unique())
+    fuel = st.selectbox("Fuel Type", df_sample["fuel"].dropna().unique())
+    engine = st.selectbox("Engine", df_sample["engine"].dropna().unique())
+    cylinders = st.selectbox("Cylinders", sorted(df_sample["cylinders"].dropna().unique()))
+    trim = st.selectbox("Trim", df_sample["trim"].dropna().unique())
 with col2:
     mileage = st.number_input("Mileage (in km)", 0, 500000, 35000)
-    engine = st.selectbox("Engine Size", ["1.2L", "1.5L", "2.0L", "3.0L", "Electric"])
-    body = st.selectbox("Body Type", ["Sedan", "Hatchback", "SUV", "Coupe"])
-    doors = st.selectbox("Doors", [2, 3, 4, 5])
+    body = st.selectbox("Body Type", df_sample["body"].dropna().unique())
+    doors = st.selectbox("Doors", sorted(df_sample["doors"].dropna().unique()))
+    exterior_color = st.selectbox("Exterior Color", df_sample["exterior_color"].dropna().unique())
+    interior_color = st.selectbox("Interior Color", df_sample["interior_color"].dropna().unique())
+    drivetrain = st.selectbox("Drivetrain", df_sample["drivetrain"].dropna().unique())
 
 # -------------------- Prediction --------------------
 if st.button("🔍 Predict Price"):
@@ -94,10 +99,15 @@ if st.button("🔍 Predict Price"):
         "year": year,
         "transmission": encode_input(transmission, "transmission"),
         "fuel": encode_input(fuel, "fuel"),
-        "mileage": mileage,
         "engine": encode_input(engine, "engine"),
-        "body_type": encode_input(body, "body_type"),
+        "cylinders": cylinders,
+        "trim": encode_input(trim, "trim"),
+        "mileage": mileage,
+        "body": encode_input(body, "body"),
         "doors": doors,
+        "exterior_color": encode_input(exterior_color, "exterior_color"),
+        "interior_color": encode_input(interior_color, "interior_color"),
+        "drivetrain": encode_input(drivetrain, "drivetrain")
     }
 
     input_df = pd.DataFrame([input_dict])
