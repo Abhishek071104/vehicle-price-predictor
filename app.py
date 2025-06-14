@@ -52,7 +52,7 @@ with st.sidebar:
     st.image(buffer, caption="Scan to open app", use_container_width=True)
 
 # Banner
-st.image("https://source.unsplash.com/1200x300/?car,showroom", use_container_width=True)
+st.image("https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_1280.jpg", use_container_width=True)
 
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
