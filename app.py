@@ -3,7 +3,9 @@ import pandas as pd
 import joblib
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+import qrcode
 import time
+from io import BytesIO
 
 # Load the trained model
 model = joblib.load("xgboost_vehicle_price_model.pkl")
@@ -43,14 +45,15 @@ with st.sidebar:
     st.markdown("### 📘 About This App")
     st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
 
+    
 st.title("🚗 Vehicle Price Predictor")
-st.markdown("Fill the details below to get your vehicle's **estimated resale price**.")
+st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
 
 # Session state for history
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Tabs
+# Layout using Tabs
 tab1, tab2 = st.tabs(["🔮 Predict", "📜 History"])
 
 with tab1:
@@ -87,8 +90,9 @@ with tab1:
     with col6:
         interior_color = st.text_input("🛋️ Interior Color", value="Black")
 
+    # Vehicle image preview
     if make and model_name:
-        st.image(f"https://source.unsplash.com/400x200/?{make},{model_name}", caption="Sample Image", use_container_width=True)
+        st.image(f"https://source.unsplash.com/400x200/?{make},{model_name}", caption="Sample Image", use_container_width=False)
 
     if st.button("🎯 Predict Price"):
         input_dict = {
@@ -107,7 +111,7 @@ with tab1:
             "interior_color": encode_input(interior_color, "interior_color"),
             "drivetrain": encode_input(drivetrain, "drivetrain")
         }
-
+        # Show progress bar while "loading"
         progress_text = "Predicting vehicle price..."
         my_bar = st.progress(0, text=progress_text)
         for percent_complete in range(100):
@@ -116,6 +120,11 @@ with tab1:
 
         input_df = pd.DataFrame([input_dict])
         prediction = model.predict(input_df)[0]
+        price = int(prediction)
+
+        input_df = pd.DataFrame([input_dict])
+        prediction = model.predict(input_df)[0]
+
         st.success(f"💵 Estimated Price: **${int(prediction):,}**")
 
         display_data = {
@@ -143,5 +152,5 @@ with tab2:
         if st.button("🧹 Clear History"):
             st.session_state.history = []
             st.success("History cleared!")
-# Banner Image
+# Banner
 st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
