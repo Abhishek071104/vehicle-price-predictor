@@ -47,7 +47,7 @@ with st.sidebar:
 
     
 st.title("🚗 Vehicle Price Predictor")
-st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
+st.markdown("Fill the details below to get your vehicle's **estimated resale price**.")
 
 # Session state for history
 if "history" not in st.session_state:
