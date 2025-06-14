@@ -90,10 +90,6 @@ with tab1:
     with col6:
         interior_color = st.text_input("🛋️ Interior Color", value="Black")
 
-    # Vehicle image preview
-    if make and model_name:
-        st.image(f"https://source.unsplash.com/400x200/?{make},{model_name}", caption="Sample Image", use_container_width=False)
-
     if st.button("🎯 Predict Price"):
         input_dict = {
             "make": encode_input(make, "make"),
