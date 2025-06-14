@@ -35,7 +35,37 @@ def encode_input(value, col_name):
 # Streamlit Config
 st.set_page_config(page_title="Vehicle Price Predictor", page_icon="🚗", layout="centered")
 
-# Sidebar
+# ---------- Top Bar ----------
+st.markdown("""
+    <style>
+        .top-bar {
+            background-color: #111827;
+            padding: 1rem;
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .main-content {
+            padding-top: 90px;
+        }
+    </style>
+    <div class="top-bar">
+        🚗 Vehicle Price Predictor
+    </div>
+""", unsafe_allow_html=True)
+
+# ---------- Banner Image ----------
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
+st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
+
+# ---------- Sidebar ----------
 with st.sidebar:
     st.markdown("### 👤 Made by [M ABHISHEK](https://github.com/Abhishek071104)")
     st.markdown("🔗[GitHub](https://github.com/Abhishek071104)")
@@ -45,7 +75,7 @@ with st.sidebar:
     st.markdown("### 📘 About This App")
     st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
 
-    
+# ---------- Main Title & Form ----------
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
 
@@ -122,9 +152,6 @@ with tab1:
         prediction = model.predict(input_df)[0]
         price = int(prediction)
 
-        input_df = pd.DataFrame([input_dict])
-        prediction = model.predict(input_df)[0]
-
         st.success(f"💵 Estimated Price: **${int(prediction):,}**")
 
         display_data = {
@@ -152,5 +179,6 @@ with tab2:
         if st.button("🧹 Clear History"):
             st.session_state.history = []
             st.success("History cleared!")
-# Banner
-st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
+
+# ---------- End main-content wrapper ----------
+st.markdown('</div>', unsafe_allow_html=True)
