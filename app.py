@@ -46,19 +46,16 @@ if "history" not in st.session_state:
 
 # -------------------- Sidebar --------------------
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/743/743007.png", width=80)
-    st.title("📌 About")
+    st.title("Reach Out to Me")
     st.markdown("""
     🚗 **Vehicle Price Predictor**  
     Built with **XGBoost + Streamlit**
 
     ---
 
-    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/-mabhishek/)
-
+    👨‍💻 [Abhishek Manipatruni](https://www.linkedin.com/in/-mabhishek/)  
     🐙 [GitHub](https://github.com/Abhishek071104)  
-    💼 [LinkedIn](https://www.linkedin.com/in/-mabhishek/)  
-    📧 [Email](https://mail.google.com/mail/?view=cm&to=manipatruniabhishek07@gmail.com)
+    📧 [Email Me](https://mail.google.com/mail/?view=cm&to=manipatruniabhishek07@gmail.com)
     """)
 
 # -------------------- Header --------------------
@@ -67,7 +64,8 @@ with col1:
     st.title("Vehicle Price Predictor")
     st.markdown("Enter vehicle details to get an estimated market price.")
 with col2:
-    st_lottie(lottie_car, height=180, key="car")
+    if lottie_car:
+        st_lottie(lottie_car, height=180, key="car")
 
 st.markdown("---")
 
@@ -75,16 +73,21 @@ st.markdown("---")
 st.subheader("🧾 Enter Vehicle Details")
 col1, col2 = st.columns(2)
 with col1:
-    make = st.text_input("Make", "Toyota")
-    model_input = st.text_input("Model", "Camry")
+    make = st.selectbox("Make", df_sample["make"].dropna().unique())
+    model_input = st.selectbox("Model", df_sample["model"].dropna().unique())
     year = st.number_input("Year", 1990, 2025, 2019)
-    transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
-    fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
+    engine = st.selectbox("Engine", df_sample["engine"].dropna().unique())
+    cylinders = st.selectbox("Cylinders", sorted(df_sample["cylinders"].dropna().unique()))
+    transmission = st.selectbox("Transmission", df_sample["transmission"].dropna().unique())
+    trim = st.selectbox("Trim", df_sample["trim"].dropna().unique())
 with col2:
-    mileage = st.number_input("Mileage (in km)", 0, 500000, 35000)
-    engine = st.selectbox("Engine Size", ["1.2L", "1.5L", "2.0L", "3.0L", "Electric"])
-    body = st.selectbox("Body Type", ["Sedan", "Hatchback", "SUV", "Coupe"])
-    doors = st.selectbox("Doors", [2, 3, 4, 5])
+    fuel = st.selectbox("Fuel Type", df_sample["fuel"].dropna().unique())
+    mileage = st.number_input("Mileage (in miles)", 0, 500000, 35000)
+    body = st.selectbox("Body Type", df_sample["body"].dropna().unique())
+    doors = st.selectbox("Doors", sorted(df_sample["doors"].dropna().unique()))
+    exterior_color = st.selectbox("Exterior Color", df_sample["exterior_color"].dropna().unique())
+    interior_color = st.selectbox("Interior Color", df_sample["interior_color"].dropna().unique())
+    drivetrain = st.selectbox("Drivetrain", df_sample["drivetrain"].dropna().unique())
 
 # -------------------- Prediction --------------------
 if st.button("🔍 Predict Price"):
@@ -92,12 +95,17 @@ if st.button("🔍 Predict Price"):
         "make": encode_input(make, "make"),
         "model": encode_input(model_input, "model"),
         "year": year,
-        "transmission": encode_input(transmission, "transmission"),
+        "engine": encode_input(engine, "engine"),
+        "cylinders": cylinders,
         "fuel": encode_input(fuel, "fuel"),
         "mileage": mileage,
-        "engine": encode_input(engine, "engine"),
-        "body_type": encode_input(body, "body_type"),
+        "transmission": encode_input(transmission, "transmission"),
+        "trim": encode_input(trim, "trim"),
+        "body": encode_input(body, "body"),
         "doors": doors,
+        "exterior_color": encode_input(exterior_color, "exterior_color"),
+        "interior_color": encode_input(interior_color, "interior_color"),
+        "drivetrain": encode_input(drivetrain, "drivetrain")
     }
 
     input_df = pd.DataFrame([input_dict])
