@@ -52,7 +52,7 @@ if "history" not in st.session_state:
 
 # -------------------- Sidebar --------------------
 with st.sidebar:
-    st.title("🚗 About")
+    st.title("Reach Out to Me")
     st.markdown("""
     🚗 **Vehicle Price Predictor**  
     Built with **XGBoost + Streamlit**
