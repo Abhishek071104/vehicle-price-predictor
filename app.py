@@ -11,16 +11,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# -------------------- Load Lottie Animation --------------------
+# -------------------- Lottie --------------------
 def load_lottieurl(url):
     r = requests.get(url)
     if r.status_code != 200:
         return None
     return r.json()
 
-lottie_car = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_pprxh53t.json")
+lottie_car = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_touohxv0.json")
 
-# -------------------- Load Model & Data --------------------
+# -------------------- Model & Data --------------------
 @st.cache_resource
 def load_model():
     return joblib.load("xgboost_vehicle_price_model.pkl")
@@ -30,10 +30,8 @@ df_sample = pd.read_csv("dataset.csv")
 categorical_cols = df_sample.select_dtypes(include=["object"]).columns.tolist()
 
 def load_label_encoders(df, cat_cols):
-    return {
-        col: {label: idx for idx, label in enumerate(df[col].astype(str).unique())}
-        for col in cat_cols
-    }
+    encoders = {col: {label: idx for idx, label in enumerate(df[col].astype(str).unique())} for col in cat_cols}
+    return encoders
 
 encoders = load_label_encoders(df_sample, categorical_cols)
 
@@ -48,23 +46,12 @@ if "history" not in st.session_state:
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/743/743007.png", width=80)
     st.title("📌 About")
-    st.markdown("""
-    🚗 **Vehicle Price Predictor**  
-    Built with **XGBoost + Streamlit**
-
-    ---
-
-    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/-mabhishek/)
-
-    🐙 [GitHub](https://github.com/Abhishek071104)  
-    💼 [LinkedIn](https://www.linkedin.com/in/-mabhishek/)  
-    📧 [Email](https://mail.google.com/mail/?view=cm&to=manipatruniabhishek07@gmail.com)
-    """)
+    st.markdown("🚗 **Vehicle Price Predictor**\nBuilt with **XGBoost + Streamlit**\n---\n👨‍💻 Made by [Abhishek Manipatruni](#)")
 
 # -------------------- Header --------------------
 col1, col2 = st.columns([1, 2])
 with col1:
-    st.title("Vehicle Price Predictor")
+    st.title("🚗 Vehicle Price Predictor")
     st.markdown("Enter vehicle details to get an estimated market price.")
 with col2:
     st_lottie(lottie_car, height=180, key="car")
@@ -86,7 +73,7 @@ with col2:
     body = st.selectbox("Body Type", ["Sedan", "Hatchback", "SUV", "Coupe"])
     doors = st.selectbox("Doors", [2, 3, 4, 5])
 
-# -------------------- Prediction --------------------
+# -------------------- Predict Button --------------------
 if st.button("🔍 Predict Price"):
     input_dict = {
         "make": encode_input(make, "make"),
@@ -102,15 +89,11 @@ if st.button("🔍 Predict Price"):
 
     input_df = pd.DataFrame([input_dict])
     prediction = model.predict(input_df)[0]
-
     st.success(f"💵 **Estimated Price: ₹{int(prediction):,}**")
 
     st.session_state.history.append({
-        "Make": make,
-        "Model": model_input,
-        "Year": year,
-        "Mileage": mileage,
-        "Predicted Price": int(prediction)
+        "Make": make, "Model": model_input, "Year": year,
+        "Mileage": mileage, "Predicted Price": int(prediction)
     })
 
 # -------------------- History --------------------
@@ -118,7 +101,7 @@ if st.session_state.history:
     st.markdown("### 🕓 Previous Predictions")
     st.dataframe(pd.DataFrame(st.session_state.history))
 
-# -------------------- Bar Chart --------------------
+# -------------------- Sample Bar Chart --------------------
 st.markdown("### 📊 Example: Mileage vs Price Trend")
 chart_data = pd.DataFrame({
     'Mileage': [0, 20000, 40000, 60000, 80000],
