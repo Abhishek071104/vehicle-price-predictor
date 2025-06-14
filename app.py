@@ -18,8 +18,8 @@ def load_lottieurl(url):
         return None
     return r.json()
 
-# ✅ WORKING car animation
-lottie_car = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_pprxh53t.json")
+# ✅ Working animated car
+lottie_car = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_iwmd6pyr.json")
 
 # -------------------- Load Model & Data --------------------
 @st.cache_resource
@@ -55,10 +55,10 @@ with st.sidebar:
 
     ---
 
-    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/mabhishek/)
+    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/-mabhishek/)
 
     🐙 [GitHub](https://github.com/Abhishek071104)  
-    💼 [LinkedIn](https://www.linkedin.com/in/mabhishek/)  
+    💼 [LinkedIn](https://www.linkedin.com/in/-mabhishek/)  
     📧 [Email](https://mail.google.com/mail/?view=cm&to=manipatruniabhishek07@gmail.com)
     """)
 
