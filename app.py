@@ -11,6 +11,10 @@ st.set_page_config(
     layout="wide"
 )
 
+# -------------------- Constants --------------------
+LOGO_URL = "https://raw.githubusercontent.com/Abhishek071104/vehicle-price-predictor/main/static/car.png"
+LOTTIE_URL = "https://assets9.lottiefiles.com/packages/lf20_u4yrau.json"
+
 # -------------------- Load Lottie Animation --------------------
 def load_lottieurl(url):
     try:
@@ -21,8 +25,7 @@ def load_lottieurl(url):
         pass
     return None
 
-# Working Lottie animation (moving car)
-lottie_car = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_u4yrau.json")
+lottie_car = load_lottieurl(LOTTIE_URL)
 
 # -------------------- Load Model & Data --------------------
 @st.cache_resource
@@ -50,7 +53,7 @@ if "history" not in st.session_state:
 
 # -------------------- Sidebar --------------------
 with st.sidebar:
-    st.image("8f0ee631-2a1f-4b9a-b296-d0165ab82a84.png", width=100)
+    st.image(LOGO_URL, width=100)
     st.title("📌 About")
     st.markdown("""
     🚗 **Vehicle Price Predictor**  
@@ -74,7 +77,7 @@ with col2:
     if lottie_car:
         st_lottie(lottie_car, height=150, key="car")
     else:
-        st.image("8f0ee631-2a1f-4b9a-b296-d0165ab82a84.png", width=150)
+        st.image(LOGO_URL, width=150)
 
 st.markdown("---")
 
