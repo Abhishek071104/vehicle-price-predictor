@@ -43,10 +43,8 @@ with st.sidebar:
     st.markdown("### 📘 About This App")
     st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
 
-# Optional heading (can be removed)
-# st.title("🚗 Vehicle Price Predictor")
-
-st.markdown("Use the form below to get your vehicle's **estimated resale price**.")
+st.title("🚗 Vehicle Price Predictor")
+st.markdown("Fill the details below to get your vehicle's **estimated resale price**.")
 
 # Session state for history
 if "history" not in st.session_state:
