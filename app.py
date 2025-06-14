@@ -3,7 +3,6 @@ import pandas as pd
 import joblib
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-import qrcode
 import time
 from io import BytesIO
 
