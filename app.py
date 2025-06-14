@@ -78,18 +78,13 @@ with col1:
     make = st.text_input("Make", "Toyota")
     model_input = st.text_input("Model", "Camry")
     year = st.number_input("Year", 1990, 2025, 2019)
-    engine = st.selectbox("Engine", df_sample["engine"].dropna().unique())
-    cylinders = st.selectbox("Cylinders", sorted(df_sample["cylinders"].dropna().unique()))
-    transmission = st.selectbox("Transmission", df_sample["transmission"].dropna().unique())
-    trim = st.selectbox("Trim", df_sample["trim"].dropna().unique())
+    transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
+    fuel = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
 with col2:
-    fuel = st.selectbox("Fuel Type", df_sample["fuel"].dropna().unique())
     mileage = st.number_input("Mileage (in km)", 0, 500000, 35000)
-    body = st.selectbox("Body Type", df_sample["body"].dropna().unique())
-    doors = st.selectbox("Doors", sorted(df_sample["doors"].dropna().unique()))
-    exterior_color = st.selectbox("Exterior Color", df_sample["exterior_color"].dropna().unique())
-    interior_color = st.selectbox("Interior Color", df_sample["interior_color"].dropna().unique())
-    drivetrain = st.selectbox("Drivetrain", df_sample["drivetrain"].dropna().unique())
+    engine = st.selectbox("Engine Size", ["1.2L", "1.5L", "2.0L", "3.0L", "Electric"])
+    body = st.selectbox("Body Type", ["Sedan", "Hatchback", "SUV", "Coupe"])
+    doors = st.selectbox("Doors", [2, 3, 4, 5])
 
 # -------------------- Prediction --------------------
 if st.button("🔍 Predict Price"):
@@ -97,12 +92,36 @@ if st.button("🔍 Predict Price"):
         "make": encode_input(make, "make"),
         "model": encode_input(model_input, "model"),
         "year": year,
-        "engine": encode_input(engine, "engine"),
-        "cylinders": cylinders,
+        "transmission": encode_input(transmission, "transmission"),
         "fuel": encode_input(fuel, "fuel"),
         "mileage": mileage,
-        "transmission": encode_input(transmission, "transmission"),
-        "trim": encode_input(trim, "trim"),
-        "body": encode_input(body, "body"),
+        "engine": encode_input(engine, "engine"),
+        "body_type": encode_input(body, "body_type"),
         "doors": doors,
-        "exterior_color": encode_input(exterior_color, "exterior_color"),
+    }
+
+    input_df = pd.DataFrame([input_dict])
+    prediction = model.predict(input_df)[0]
+
+    st.success(f"💵 **Estimated Price: ₹{int(prediction):,}**")
+
+    st.session_state.history.append({
+        "Make": make,
+        "Model": model_input,
+        "Year": year,
+        "Mileage": mileage,
+        "Predicted Price": int(prediction)
+    })
+
+# -------------------- History --------------------
+if st.session_state.history:
+    st.markdown("### 🕓 Previous Predictions")
+    st.dataframe(pd.DataFrame(st.session_state.history))
+
+# -------------------- Bar Chart --------------------
+st.markdown("### 📊 Example: Mileage vs Price Trend")
+chart_data = pd.DataFrame({
+    'Mileage': [0, 20000, 40000, 60000, 80000],
+    'Predicted Price': [45000, 40000, 35000, 30000, 25000]
+})
+st.bar_chart(chart_data.set_index("Mileage"))
