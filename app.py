@@ -52,11 +52,11 @@ with st.sidebar:
 
     ---
 
-    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/abhishek-manipatruni)
+    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/-mabhishek/)
 
     🐙 [GitHub](https://github.com/Abhishek071104)  
-    💼 [LinkedIn](https://www.linkedin.com/in/abhishek-manipatruni)  
-    📧 [Email](mailto:your-email@example.com)
+    💼 [LinkedIn](https://www.linkedin.com/in/-mabhishek/)  
+    📧 [Email](mailto:manipatruniabhishek07@gmail.com)
     """)
 
 # -------------------- Header --------------------
