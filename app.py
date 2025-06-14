@@ -54,7 +54,7 @@ with st.sidebar:
 
     ---
 
-    👨‍💻 Made by [Abhishek Manipatruni](https://www.linkedin.com/in/-mabhishek/)
+    👨‍💻 Made by [M ABHISHEK](https://www.linkedin.com/in/-mabhishek/)
 
     🐙 [GitHub](https://github.com/Abhishek071104)  
     💼 [LinkedIn](https://www.linkedin.com/in/-mabhishek/)  
