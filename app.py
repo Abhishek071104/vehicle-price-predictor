@@ -33,32 +33,6 @@ def encode_input(value, col_name):
 # Streamlit Config
 st.set_page_config(page_title="Vehicle Price Predictor", page_icon="🚗", layout="centered")
 
-# Top bar (fixed)
-st.markdown("""
-    <style>
-        .custom-top-bar {
-            background-color: #111827;
-            padding: 1rem;
-            color: white;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 9999;
-            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        .main > div:first-child {
-            padding-top: 80px;
-        }
-    </style>
-    <div class="custom-top-bar">
-        🚗 Vehicle Price Predictor
-    </div>
-""", unsafe_allow_html=True)
-
 # Sidebar
 with st.sidebar:
     st.markdown("### 👤 Made by [M ABHISHEK](https://github.com/Abhishek071104)")
@@ -68,9 +42,6 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 📘 About This App")
     st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
-
-# Banner Image
-st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
 
 # Optional heading (can be removed)
 # st.title("🚗 Vehicle Price Predictor")
@@ -174,3 +145,5 @@ with tab2:
         if st.button("🧹 Clear History"):
             st.session_state.history = []
             st.success("History cleared!")
+# Banner Image
+st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
