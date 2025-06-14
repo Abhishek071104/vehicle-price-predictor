@@ -45,7 +45,7 @@ with st.sidebar:
     st.markdown("### 📘 About This App")
     st.write("This application uses a trained **XGBoost model** to predict the estimated market price of a vehicle based on its specifications and condition. Built with XGBoost and Streamlit.")
 
-    
+# Title & Subtitle
 st.title("🚗 Vehicle Price Predictor")
 st.markdown("Fill the details below to get your vehicle's **estimated resale price**.")
 
@@ -111,7 +111,7 @@ with tab1:
             "interior_color": encode_input(interior_color, "interior_color"),
             "drivetrain": encode_input(drivetrain, "drivetrain")
         }
-        # Show progress bar while "loading"
+
         progress_text = "Predicting vehicle price..."
         my_bar = st.progress(0, text=progress_text)
         for percent_complete in range(100):
@@ -122,10 +122,7 @@ with tab1:
         prediction = model.predict(input_df)[0]
         price = int(prediction)
 
-        input_df = pd.DataFrame([input_dict])
-        prediction = model.predict(input_df)[0]
-
-        st.success(f"💵 Estimated Price: **${int(prediction):,}**")
+        st.success(f"💵 Estimated Price: **${price:,}**")
 
         display_data = {
             "Make": make,
@@ -136,7 +133,7 @@ with tab1:
             "Fuel": fuel,
             "Transmission": transmission,
             "Body": body,
-            "Price ($)": int(prediction)
+            "Price ($)": price
         }
         st.session_state.history.append(display_data)
 
@@ -152,5 +149,6 @@ with tab2:
         if st.button("🧹 Clear History"):
             st.session_state.history = []
             st.success("History cleared!")
-# Banner
+
+# Banner image
 st.image("360_F_910998153_tOayMd30RZjpx2kzh9baGdcLBDXwMj00.jpg", use_container_width=True)
