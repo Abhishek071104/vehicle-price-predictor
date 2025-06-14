@@ -3,6 +3,8 @@ import pandas as pd
 import joblib
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+import qrcode
+from io import BytesIO
 
 # Load the trained model
 model = joblib.load("xgboost_vehicle_price_model.pkl")
@@ -41,7 +43,13 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 📘 About This App")
     st.write("This ML-powered app estimates the market price of a vehicle based on its specs.")
-    st.image("/mnt/data/app_qr_code.png", caption="Scan to open app", use_column_width=True)
+
+    # QR Code (in-memory)
+    qr = qrcode.make("https://vehiclepricepredictor.streamlit.app")
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    buffer.seek(0)
+    st.image(buffer, caption="Scan to open app", use_column_width=True)
 
 # Banner
 st.image("https://source.unsplash.com/1200x300/?car,showroom", use_column_width=True)
